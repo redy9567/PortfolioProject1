@@ -3,6 +3,11 @@
 
 LRESULT __stdcall WindowsProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam);
 
+void OnSize(HWND hwnd, UINT flag, int width, int height);
+
+void OnPaint(HWND hwnd);
+void PromptExit(HWND hwnd);
+
 int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
 	const wchar_t CLASS_NAME[] = L"Sample Window Class";
@@ -34,13 +39,62 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLi
 
 	ShowWindow(hwnd, nCmdShow);
 
-	while (true)
-		true;
+	MSG msg;
+
+	while (GetMessage(&msg, NULL, 0, 0) > 0)
+	{
+		
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 
 	return 0;
 }
 
 LRESULT __stdcall WindowsProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	switch (uMsg)
+	{
+	case WM_SIZE:
+	{
+		int width = LOWORD(lParam);
+		int height = HIWORD(lParam);
+
+		OnSize(hwnd, (UINT)wParam, width, height);
+		break;
+	}
+	case WM_PAINT:
+		OnPaint(hwnd);
+		break;
+
+	case WM_CLOSE:
+		PromptExit(hwnd);
+		return 0;
+		
+	}
+
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+void OnSize(HWND hwnd, UINT flag, int width, int height)
+{
+
+}
+
+void OnPaint(HWND hwnd)
+{
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(hwnd, &ps);
+
+	FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+	
+	EndPaint(hwnd, &ps);
+}
+
+void PromptExit(HWND hwnd)
+{
+	if (MessageBox(hwnd, L"REALLY QUIT??", L"get rekt kid", MB_OKCANCEL) == IDOK)
+	{
+		DestroyWindow(hwnd);
+	}
 }
