@@ -11,6 +11,10 @@ public:
 
 	void init();
 	void cleanup();
+	bool update();
+
+	void flip();
+	void drawEllipse();
 
 	static void initInstance();
 	static GraphicsSystem* getInstance();
@@ -22,19 +26,20 @@ private:
 	ID2D1HwndRenderTarget* pRenderTarget;
 	ID2D1SolidColorBrush* pBrush;
 	D2D1_ELLIPSE ellipse;
+	HWND windowHandle;
 
 	static GraphicsSystem* mspInstance;
 
 	int __stdcall OpenWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance/*, PSTR lpCmdLine*/, INT nCmdShow);
 	
-	HRESULT CreateGraphicsResources(HWND hwnd);
+	HRESULT CreateGraphicsResources();
 	void DiscardGraphicsResources();
 	void CalculateLayout();
 	//Window Handling
 	static LRESULT __stdcall WindowsProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam);
 	void OnSize(HWND hwnd, UINT flag, int width, int height);
 	void OnPaint(HWND hwnd);
-	void PromptExit(HWND hwnd);
+	void PromptExit();
 	void CreateFactory();
 
 };

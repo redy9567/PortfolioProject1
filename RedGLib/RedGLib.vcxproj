@@ -139,9 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GraphicsBuffer.h" />
     <ClInclude Include="GraphicsSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GraphicsBuffer.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -149,6 +151,7 @@
     <ResourceCompile Include="RedGLib.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="cat.jpg" />
     <Image Include="RedGLib.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

@@ -18,12 +18,18 @@
     <ClInclude Include="GraphicsSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,6 +43,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="RedGLib.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="cat.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

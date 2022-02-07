@@ -44,6 +44,8 @@ void GraphicsSystem::init()
 	if (!mIsInit)
 	{
 		OpenWindow(GetModuleHandle(NULL), 0, 1);
+		CreateGraphicsResources();
+		pRenderTarget->BeginDraw();
 		mIsInit = true;
 	}
 	
@@ -53,6 +55,8 @@ void GraphicsSystem::cleanup()
 {
 	if (mIsInit)
 	{
+		pRenderTarget->EndDraw();
+		DiscardGraphicsResources();
 		PostQuitMessage(0);
 		mIsInit = false;
 	}
@@ -70,7 +74,7 @@ int __stdcall GraphicsSystem::OpenWindow(HINSTANCE hInstance, HINSTANCE hPrevIns
 
 	RegisterClass(&wc);
 
-	HWND hwnd = CreateWindowEx(
+	windowHandle = CreateWindowEx(
 		0, //Optional Window Styles
 		CLASS_NAME, //Window Class
 		L"Welcome to the world of programming!", //Window Text
@@ -85,18 +89,9 @@ int __stdcall GraphicsSystem::OpenWindow(HINSTANCE hInstance, HINSTANCE hPrevIns
 		NULL //Additional Application Data
 	);
 
-	assert(hwnd);
+	assert(windowHandle);
 
-	ShowWindow(hwnd, nCmdShow);
-
-	MSG msg;
-
-	while (GetMessage(&msg, NULL, 0, 0) > 0)
-	{
-
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+	ShowWindow(windowHandle, nCmdShow);
 
 	return 0;
 }
@@ -117,11 +112,11 @@ LRESULT __stdcall GraphicsSystem::WindowsProc(HWND hwnd, UINT uMsg, WPARAM wPara
 		break;
 	}
 	case WM_PAINT:
-		mspInstance->OnPaint(hwnd);
+		//mspInstance->OnPaint(hwnd);
 		break;
 
 	case WM_CLOSE:
-		mspInstance->PromptExit(hwnd);
+		mspInstance->PromptExit();
 		return 0;
 
 	case WM_DESTROY:
@@ -133,18 +128,18 @@ LRESULT __stdcall GraphicsSystem::WindowsProc(HWND hwnd, UINT uMsg, WPARAM wPara
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-HRESULT GraphicsSystem::CreateGraphicsResources(HWND hwnd)
+HRESULT GraphicsSystem::CreateGraphicsResources()
 {
 	HRESULT endResult = S_OK;
 	if (pRenderTarget == nullptr)
 	{
 		RECT area;
-		GetClientRect(hwnd, &area);
+		GetClientRect(windowHandle, &area);
 
 		D2D1_SIZE_U size = D2D1::SizeU(area.right, area.bottom);
 
 		endResult = pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
-			D2D1::HwndRenderTargetProperties(hwnd, size), 
+			D2D1::HwndRenderTargetProperties(windowHandle, size),
 			&pRenderTarget);
 
 		if (SUCCEEDED(endResult))
@@ -202,7 +197,7 @@ void GraphicsSystem::OnSize(HWND hwnd, UINT flag, int width, int height)
 
 void GraphicsSystem::OnPaint(HWND hwnd)
 {
-	HRESULT endResult = CreateGraphicsResources(hwnd);
+	HRESULT endResult = CreateGraphicsResources();
 	if (SUCCEEDED(endResult))
 	{
 		PAINTSTRUCT ps;
@@ -222,10 +217,45 @@ void GraphicsSystem::OnPaint(HWND hwnd)
 	}
 }
 
-void GraphicsSystem::PromptExit(HWND hwnd)
+void GraphicsSystem::PromptExit()
 {
-	if (MessageBox(hwnd, L"REALLY QUIT??", L"you did it!", MB_OKCANCEL) == IDOK)
+	if (MessageBox(windowHandle, L"REALLY QUIT??", L"you did it!", MB_OKCANCEL) == IDOK)
 	{
-		DestroyWindow(hwnd);
+		DestroyWindow(windowHandle);
+		windowHandle = NULL;
 	}
+}
+
+bool GraphicsSystem::update()
+{
+	if (!windowHandle)
+		return false;
+
+	MSG msg;
+
+	while (PeekMessage(&msg, windowHandle, 0, 0, PM_REMOVE))
+	{
+
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	return true;
+}
+
+void GraphicsSystem::flip()
+{
+	pRenderTarget->EndDraw();
+	pRenderTarget->BeginDraw();
+}
+
+void GraphicsSystem::drawEllipse()
+{
+	PAINTSTRUCT ps;
+	BeginPaint(windowHandle, &ps);
+
+	pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));
+	pRenderTarget->FillEllipse(ellipse, pBrush);
+
+	EndPaint(windowHandle, &ps);
 }

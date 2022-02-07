@@ -3,6 +3,7 @@
 #include <iostream>
 
 using namespace std;
+ 
 
 int main()
 {
@@ -13,6 +14,15 @@ int main()
 	gs->init();
 
 	cout << "Well Well" << endl;
+
+	bool shouldContinue = true;
+	while (shouldContinue)
+	{
+		shouldContinue = gs->update();
+		gs->drawEllipse();
+		gs->flip();
+	}
+
 	system("pause");
 
 	gs->cleanup();
