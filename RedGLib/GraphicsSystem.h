@@ -6,6 +6,8 @@ class GraphicsSystem
 {
 
 public:
+	friend class GraphicsBuffer;
+
 	GraphicsSystem();
 	~GraphicsSystem();
 
