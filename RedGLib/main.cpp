@@ -15,15 +15,16 @@ int main()
 
 	gs->init();
 
-	//cout << "Well Well" << endl;
+	cout << "Well Well" << endl;
 
-	//GraphicsBuffer* buf = new GraphicsBuffer(p);
+	GraphicsBuffer* buf = new GraphicsBuffer(p);
 
 	bool shouldContinue = true;
 	while (shouldContinue)
 	{
 		shouldContinue = gs->update();
 		gs->drawEllipse();
+		gs->drawGraphicsBuffer(buf, 600, 300, 0.25f);
 		gs->flip();
 	}
 

@@ -1,6 +1,7 @@
 #pragma comment(lib, "d2d1")
 #include "GraphicsSystem.h"
 #include <assert.h>
+#include "GraphicsBuffer.h"
 
 GraphicsSystem* GraphicsSystem::mspInstance = nullptr;
 
@@ -258,4 +259,14 @@ void GraphicsSystem::drawEllipse()
 	pRenderTarget->FillEllipse(ellipse, pBrush);
 
 	EndPaint(windowHandle, &ps);
+}
+
+void GraphicsSystem::drawGraphicsBuffer(GraphicsBuffer* gb, float locX, float locY, float scale)
+{
+
+	float height = gb->mpD2DBitmap->GetSize().height * scale;
+	float width = gb->mpD2DBitmap->GetSize().width * scale;
+
+	pRenderTarget->DrawBitmap(gb->mpD2DBitmap, D2D1::RectF(locX, locY, locX + width, locY + height), 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+
 }

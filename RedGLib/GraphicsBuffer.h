@@ -9,6 +9,8 @@
 class GraphicsBuffer
 {
 public:
+	friend class GraphicsSystem;
+
 	GraphicsBuffer(LPCWSTR filepath);
 	~GraphicsBuffer();
 

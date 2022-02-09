@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <d2d1.h>
 
+class GraphicsBuffer;
+
 class GraphicsSystem
 {
 
@@ -17,6 +19,7 @@ public:
 
 	void flip();
 	void drawEllipse();
+	void drawGraphicsBuffer(GraphicsBuffer* gb, float locX, float locY, float scale = 1.0f);
 
 	static void initInstance();
 	static GraphicsSystem* getInstance();
